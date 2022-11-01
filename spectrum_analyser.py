@@ -17,10 +17,12 @@ RATE = 44100  # in Hz
 OFFSET = 80
 BANDS = 16
 DEVICE_INDEX = 2
-FREQ_AREA = 30  # Hz
+FREQ_AREA = 40  # Hz
 WIN_SIZE = FREQ_AREA/BANDS
-SHIFT = 5
+SHIFT = 3
 BOOST = 2
+SMOOTH = 2 # high value is slow fall
+FALLDOWN = 5 # high value is slow fall
 
 
 p = pa.PyAudio()
@@ -39,7 +41,10 @@ class Stream(object):
             # input_device_index=DEVICE_INDEX
         )
         self.check_devices()
-        self.flag = True
+        self.flag = True  # for test mode
+        self.old_vals = [0 for _ in range(16)]
+        self.max_vals = [0 for _ in range(16)]
+        self.cnt = 0
 
     def check_devices(self):
         info = p.get_host_api_info_by_index(0)
@@ -100,25 +105,48 @@ class Stream(object):
             elif val > 0:
                 val = 0
             normalised.append(int(_val*(BANDS)))
-        if TEST:
+        if TEST:  # draw vertical lines at plot
             if self.flag:
                 self.flag = False
             for bar in stops:
-                self.ax3.axvline(x=bar, color='b', label='axvline - full height')
+                self.ax3.axvline(x=bar, color='b',
+                                 label='axvline - full height')
             for bar in starts:
-                self.ax3.axvline(x=bar, color='g', label='axvline - full height')
+                self.ax3.axvline(x=bar, color='g',
+                                 label='axvline - full height')
+
+        # update  last values
+        for new, old, i in zip(normalised, self.old_vals, range(BANDS)):
+            if new >= old:
+                self.old_vals[i] = new 
+            else:
+                if self.cnt%SMOOTH == 0:
+                    self.old_vals[i] = old - 1 if old > 0 else old
+
+        # update falldown dots
+        for new, old, i in zip(normalised, self.max_vals, range(BANDS)):
+            if new >= old:
+                self.max_vals[i] = new
+            else:
+                if self.cnt%FALLDOWN == 0:
+                    self.max_vals[i] = old - 1 if old > 1 else old
+        
+                
+                
+
+        
+
         return normalised
 
     def draw_matrix(self, mapped_data):
         matrix.clear()
         for y, x in zip(mapped_data, range(BANDS)):
             # print(x, y)
-            for i in range(y+1):
-                if i == y:
-                    matrix.draw(x, i, [255, 255, 0])
-                else:
-                    matrix.draw(x, i, [255, 0, 0])
+            for i in range(self.old_vals[x]):
+                matrix.draw(x, i, [255, 0, 0])
+            matrix.draw(x, self.max_vals[x], [125, 125, 0])
         matrix.pixels.show()
+        self.cnt += 1
         # time.sleep(0.1)
 
 
@@ -129,6 +157,7 @@ if __name__ == '__main__':
     while True:
         dataInt, dataFFT = stream.get_data()
         fft_mapped = stream.map_data(dataFFT)
-        stream.draw_matrix(fft_mapped)
         if TEST:
             stream.update_matplot(dataInt, dataFFT, fft_mapped)
+        else:
+            stream.draw_matrix(fft_mapped)

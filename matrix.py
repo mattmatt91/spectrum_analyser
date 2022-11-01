@@ -57,12 +57,11 @@ def wheel(pos):
         r = 0
         g = int(pos * 3)
         b = int(255 - pos * 3)
-    # if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
     return [r, g, b]
-    return (r, g, b)  # if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
-def draw_sine(self, cnt):
+
+def draw_sine(cnt):
     for x in range(length):
         color = wheel(((cnt+length//2)*length) % 255)
         ymax = get_sine(length, 32, 0.5) + length//3
@@ -80,5 +79,5 @@ if __name__ == '__main__':
     cnt = 0
     while True:
         # matrix.clear()
-        matrix.draw_sine(cnt)
+        draw_sine(cnt)
         cnt += 1
