@@ -60,7 +60,6 @@ def wheel(pos):
     return [r, g, b]
 
 
-
 def draw_sine(cnt):
     for x in range(length):
         color = wheel(((cnt+length//2)*length) % 255)
