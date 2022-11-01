@@ -18,7 +18,7 @@ class Matrix():
     def __init__(self):
         self.pixels = neopixel.NeoPixel_SPI(spi,
                                             length*length,
-                                            brightness=0.01,
+                                            brightness=0.1,
                                             pixel_order=PIXEL_ORDER,
                                             auto_write=False)
 
