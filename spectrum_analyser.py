@@ -23,6 +23,7 @@ BOOST = 2
 SMOOTH = 2  # high value is slow fall
 FALLDOWN = 5  # high value is slow fall
 FADESPEED = 5 # color change speed, high value is lsow speed
+RAINBOW = 3 #255//BANDS  # gradient of colors for x axis
 
 
 p = pa.PyAudio()
@@ -105,12 +106,15 @@ class Stream(object):
 
     def draw_matrix(self):
         matrix.clear()
+        col_val = (self.cnt//FADESPEED)
         for x in range(BANDS):
+            col_val += RAINBOW
             for i in range(self.old_vals[x]):
-                matrix.draw(x, i, wheel((self.cnt//FADESPEED)%255))
-            matrix.draw(x, self.max_vals[x], [125, 125, 0])
-        matrix.pixels.show()
+                matrix.draw_pixel(x, i, wheel(col_val%255))
+            matrix.draw_pixel(x, self.max_vals[x], [125, 125, 0])
         self.cnt += 1
+
+
 
 
 if __name__ == '__main__':
@@ -120,3 +124,4 @@ if __name__ == '__main__':
         dataInt, dataFFT = stream.get_data()
         stream.map_data(dataFFT)
         stream.draw_matrix()
+        matrix.show()
