@@ -16,7 +16,7 @@ class Animations():
             max_x = max(x)
             max_y = max(y)
 
-            man = [[ix, iy+6] for ix, iy in zip(x,y)]
+            man = [[ix, iy+5] for ix, iy in zip(x,y)]
             self.men.append(man)
 
         # ON AIR

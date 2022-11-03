@@ -17,10 +17,10 @@ BANDS = 16 # number of pixel cols
 DEVICE_INDEX = 2 # audio interface
 FREQ_AREA = 30  # win size of raw data
 WIN_SIZE = FREQ_AREA/BANDS # size of array for one band at matrix
-BOOST = 2 # amplifying signal
-SMOOTH = 2  # high value is slow fall
-FALLDOWN = 5  # high value is slow fall
-FADESPEED = 10  # color change speed, high value is lsow speed
+BOOST = 2.5 # amplifying signal
+SMOOTH = 3  # high value is slow fall
+FALLDOWN = 10  # high value is slow fall
+FADESPEED = 1  # color change speed, high value is lsow speed
 RAINBOW = 3  # 255//BANDS  # gradient of colors for x axis
 
 
@@ -54,9 +54,9 @@ class NeoPixelMatrix:
             for i in range(old_values[x]):
                 self.matrix.draw_pixel(x, i, wheel(col_val % 255))
             self.matrix.draw_pixel(x, max_values[x], [125, 125, 0])
-        self.cnt += 1
 
     def show(self):
+        self.cnt += 1
         self.matrix.show()
 
     def render_animation(self, func):
@@ -73,27 +73,26 @@ class Visualization():
     def __init__(self):
         self.old_vals = [0 for _ in range(16)]
         self.max_vals = [0 for _ in range(16)]
-        self.cnt = 0
 
-    def update_max(self, new_data):
+    def update_max(self,cnt, new_data):
         for new, old, i in zip(new_data, self.max_vals, range(BANDS)):
             if new >= old:
                 self.max_vals[i] = new
             else:
-                if self.cnt % FALLDOWN == 0:
+                if cnt % FALLDOWN == 0:
                     self.max_vals[i] = old - 1 if old > 0 else old
 
-    def update_last(self, new_data):
+    def update_last(self, cnt,  new_data):
         for new, old, i in zip(new_data, self.old_vals, range(BANDS)):
             if new >= old:
                 self.old_vals[i] = new
             else:
-                if self.cnt % SMOOTH == 0:
+                if cnt % SMOOTH == 0:
                     self.old_vals[i] = old - 1 if old > 0 else old
 
-    def update(self, data):
-        self.update_max(data)
-        self.update_last(data)
+    def update(self,cnt, data):
+        self.update_max(cnt, data)
+        self.update_last(cnt, data)
 
 
 class Stream(object):
@@ -152,13 +151,13 @@ if __name__ == '__main__':
         data = stream.map_data(dataFFT)
 
         # update visualization
-        visualization.update(data)
+        visualization.update(neopixelmatrix.cnt, data)
 
         # render to led matrix
 
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
         
-        neopixelmatrix.render_animation(animations.get_onair)
+        neopixelmatrix.render_animation(animations.get_man)
 
 
         neopixelmatrix.show()
