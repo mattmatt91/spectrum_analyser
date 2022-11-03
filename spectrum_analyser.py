@@ -9,20 +9,18 @@ from math import log10, log
 from matrix import Matrix, wheel
 
 
-CHUNK = 1024
+CHUNK = 1024 # audio resolution
 FORMAT = pa.paInt16
 CHANNELS = 1
 RATE = 44100  # in Hz
-OFFSET = 80
-BANDS = 16
-DEVICE_INDEX = 2
-FREQ_AREA = 30  # Hz
-WIN_SIZE = FREQ_AREA/BANDS
-SHIFT = 5
-BOOST = 2
+BANDS = 16 # number of pixel cols
+DEVICE_INDEX = 2 # audio interface
+FREQ_AREA = 30  # win size of raw data
+WIN_SIZE = FREQ_AREA/BANDS # size of array for one band at matrix
+BOOST = 2 # amplifying signal
 SMOOTH = 2  # high value is slow fall
 FALLDOWN = 5  # high value is slow fall
-FADESPEED = 5  # color change speed, high value is lsow speed
+FADESPEED = 10  # color change speed, high value is lsow speed
 RAINBOW = 3  # 255//BANDS  # gradient of colors for x axis
 
 
@@ -47,7 +45,7 @@ class NeoPixelMatrix:
         self.matrix = Matrix()
         self.cnt = 0
 
-    def render(self, old_values, max_values):
+    def render_spec(self, old_values, max_values):
         self.matrix.clear()
         col_val = (self.cnt//FADESPEED)
         for x in range(BANDS):
@@ -57,6 +55,10 @@ class NeoPixelMatrix:
             self.matrix.draw_pixel(x, max_values[x], [125, 125, 0])
         self.cnt += 1
         self.matrix.show()
+
+    def render_men(self):
+        pass
+        
 
 
 class Visualization():
@@ -145,4 +147,4 @@ if __name__ == '__main__':
 
         # render to led matrix
 
-        neopixelmatrix.render(visualization.old_vals, visualization.max_vals)
+        neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
