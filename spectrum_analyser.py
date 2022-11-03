@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import time
 from math import log10, log
 from matrix import Matrix, wheel
-
+from animated_figs import Animations
 
 CHUNK = 1024 # audio resolution
 FORMAT = pa.paInt16
@@ -45,6 +45,7 @@ class NeoPixelMatrix:
         self.matrix = Matrix()
         self.cnt = 0
 
+
     def render_spec(self, old_values, max_values):
         self.matrix.clear()
         col_val = (self.cnt//FADESPEED)
@@ -54,11 +55,18 @@ class NeoPixelMatrix:
                 self.matrix.draw_pixel(x, i, wheel(col_val % 255))
             self.matrix.draw_pixel(x, max_values[x], [125, 125, 0])
         self.cnt += 1
+
+    def show(self):
         self.matrix.show()
 
-    def render_men(self):
-        pass
+    def render_animation(self, func):
+        for i in func(self.cnt):
+            try:
+                self.matrix.draw_pixel(int(i[0]), int(i[1]), [255, 0, 0])
+            except:
+                print('pixel not in range: ')
         
+
 
 
 class Visualization():
@@ -134,6 +142,7 @@ if __name__ == '__main__':
     stream = Stream()
     visualization = Visualization()
     neopixelmatrix = NeoPixelMatrix()
+    animations = Animations()
 
     while True:
         # get data from audio interface
@@ -148,3 +157,8 @@ if __name__ == '__main__':
         # render to led matrix
 
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
+        
+        neopixelmatrix.render_animation(animations.get_onair)
+
+
+        neopixelmatrix.show()
