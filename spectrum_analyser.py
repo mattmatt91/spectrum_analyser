@@ -56,6 +56,7 @@ class NeoPixelMatrix:
                 self.matrix.draw_pixel(x, i, wheel(col_val % 255))
             self.matrix.draw_pixel(x, max_values[x], [125, 125, 0])
         self.cnt += 1
+        self.matrix.show()
 
 
 class Visualization():
@@ -130,7 +131,7 @@ class Stream(object):
 if __name__ == '__main__':
     stream = Stream()
     visualization = Visualization()
-    neopixelMatrix = NeoPixelMatrix()
+    neopixelmatrix = NeoPixelMatrix()
 
     while True:
         # get data from audio interface
@@ -143,4 +144,5 @@ if __name__ == '__main__':
         visualization.update(data)
 
         # render to led matrix
-        NeoPixelMatrix.render(visualization.old_vals, visualization.max_vals)
+
+        neopixelmatrix.render(visualization.old_vals, visualization.max_vals)
