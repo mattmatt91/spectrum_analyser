@@ -13,7 +13,7 @@ def init_man():
         y = [int(i) for i in [man[i][1] for i in range(len(man))]]
         max_x = max(x)
         max_y = max(y)
-        color = [[255,0,0] for _ in range(len(x))]
+        color = [[0,255,0] for _ in range(len(x))]
         man = [[ix, iy+5, c] for ix, iy, c in zip(x,y,color)]
         men.append(man)
     return men

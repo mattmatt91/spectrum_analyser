@@ -22,7 +22,7 @@ class Matrix():
     def __init__(self):
         self.pixels = neopixel.NeoPixel_SPI(spi,
                                             BANDS*BANDS,
-                                            brightness=1,
+                                            brightness=0.1,
                                             pixel_order=PIXEL_ORDER,
                                             auto_write=False)
         self.pixel_framebuf = PixelFramebuffer(
@@ -32,7 +32,10 @@ class Matrix():
                                             reverse_x=False,)
 
 
-    def draw_pixel(self, x, y, color):
+
+    def draw_pixel(self, x, y, color, rotate=False):
+        if rotate:
+            x,y = y,x
         self.pixel_framebuf.pixel(x, y, self.map_color(color))
 
     def draw_fill(self, color):
