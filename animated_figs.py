@@ -37,8 +37,6 @@ class Animations():
             return self.get_man(cnt)
         if func == 'onair':
             return self.get_onair(cnt)
-        if func == 'square':
-            return self.get_square(cnt)
         else:
             print('prog not available')
     
@@ -46,7 +44,7 @@ class Animations():
         if cnt%20 == 0:
             self.step = ((self.step+1)%2)
         if self.step == 0:
-            return self.on_air
+            return self.onair
         else:
             return []
     
@@ -55,12 +53,7 @@ class Animations():
             self.step = ((self.step+1)%3)
         return self.men[self.step]
 
-    def get_square(self, cnt):
-        dots = []
-        for i in range(cnt%SIZE):
-            for n in range(cnt%SIZE):
-                dots.append([SIZE-1-n,SIZE-1-i])
-        return dots
+
 
          
 

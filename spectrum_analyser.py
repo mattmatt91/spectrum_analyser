@@ -46,7 +46,6 @@ class NeoPixelMatrix:
         self.cnt = 0
 
     def render_spec(self, old_values, max_values):
-        self.matrix.clear()
         col_val = (self.cnt//FADESPEED)
         for x in range(BANDS):
             col_val += RAINBOW
@@ -57,6 +56,10 @@ class NeoPixelMatrix:
     def show(self):
         self.cnt += 1
         self.matrix.show()
+
+    def clear(self):
+        self.matrix.clear()
+
 
     def render_animation(self, dots):
         for dot in dots:
@@ -151,9 +154,7 @@ if __name__ == '__main__':
 
         # render to led matrix
 
+        neopixelmatrix.clear()
+        neopixelmatrix.render_animation(animations.get_animation(neopixelmatrix.cnt, func='onair'))
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
-        
-        neopixelmatrix.render_animation(animations.get_animation(neopixelmatrix.cnt, func='square'))
-
-
         neopixelmatrix.show()
