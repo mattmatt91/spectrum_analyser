@@ -87,11 +87,11 @@ class Animations():
             print('prog not available')
 
     def get_random(self):
-        if self.cnt%10 == 0:
+        if self.cnt%3== 0:
             self.buffer = []
             for x in range(SIZE):
                 for y in range(SIZE):
-                    color = [int(i*0.05) for i in wheel((self.step+randint(1,100))%255)]
+                    color = [int(i*0.15) for i in wheel((self.cnt+randint(1,100))%255)]
                     self.buffer.append([x,y, color])
 
         return self.buffer
