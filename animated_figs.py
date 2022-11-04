@@ -27,15 +27,21 @@ def init_onair():
     return onair
 
 class Animations():
-    def __init__(self, size) -> None:
+    def __init__(self) -> None:
         self.step = 1
-        self.size = size
         self.men = init_man()
         self.onair = init_onair()
-        self.animations = {'men':'get_man'}
-        # men
 
-
+    def get_animation(self, cnt, func):
+        if func == 'men':
+            return self.get_man(cnt)
+        if func == 'onair':
+            return self.get_onair(cnt)
+        if func == 'square':
+            return self.get_square(cnt)
+        else:
+            print('prog not available')
+    
     def get_onair(self, cnt):
         if cnt%20 == 0:
             self.step = ((self.step+1)%2)
@@ -43,21 +49,18 @@ class Animations():
             return self.on_air
         else:
             return []
-
-
+    
     def get_man(self, cnt):
         if cnt%30 == 0:
             self.step = ((self.step+1)%3)
         return self.men[self.step]
 
-
-    def get_animation(self, cnt, func):
-        if func == 'men':
-            return self.get_man(cnt)
-        if func == 'onair':
-            return self.get_onair(cnt)
-        else:
-            print('prog not available')
+    def get_square(self, cnt):
+        dots = []
+        for i in range(cnt%SIZE):
+            for n in range(cnt%SIZE):
+                dots.append([SIZE-1-n,SIZE-1-i])
+        return dots
 
          
 

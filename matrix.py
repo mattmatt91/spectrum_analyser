@@ -30,7 +30,7 @@ class Matrix():
                                             BANDS,
                                             BANDS,
                                             reverse_x=False,)
-        self.animations = Animations(BANDS)
+
 
     def draw_pixel(self, x, y, color):
         self.pixel_framebuf.pixel(x, y, self.map_color(color))
