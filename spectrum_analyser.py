@@ -51,7 +51,7 @@ class NeoPixelMatrix:
             col_val += RAINBOW
             for i in range(old_values[x]):
                 self.matrix.draw_pixel(x, i, wheel(col_val % 255))
-            self.matrix.draw_pixel(x, max_values[x], [125, 125, 0])
+            self.matrix.draw_pixel(x, max_values[x], [255, 0, 0])
 
     def show(self):
         self.cnt += 1
@@ -63,7 +63,7 @@ class NeoPixelMatrix:
 
     def render_animation(self, dots):
         for dot in dots:
-            self.matrix.draw_pixel(int(dot[0]), int(dot[1]), [255, 0, 0])
+            self.matrix.draw_pixel(int(dot[0]), int(dot[1]), dot[2])
         
 
 
@@ -155,6 +155,6 @@ if __name__ == '__main__':
         # render to led matrix
 
         neopixelmatrix.clear()
-        neopixelmatrix.render_animation(animations.get_animation(neopixelmatrix.cnt, func='onair'))
+        neopixelmatrix.render_animation(animations.get_animation(neopixelmatrix.cnt, func='random'))
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
         neopixelmatrix.show()

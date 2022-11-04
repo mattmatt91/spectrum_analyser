@@ -22,7 +22,7 @@ class Matrix():
     def __init__(self):
         self.pixels = neopixel.NeoPixel_SPI(spi,
                                             BANDS*BANDS,
-                                            brightness=0.1,
+                                            brightness=1,
                                             pixel_order=PIXEL_ORDER,
                                             auto_write=False)
         self.pixel_framebuf = PixelFramebuffer(
