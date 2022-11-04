@@ -19,11 +19,14 @@ FREQ_AREA = 30  # win size of raw data
 WIN_SIZE = FREQ_AREA/BANDS # size of array for one band at matrix
 BOOST = 2.5 # amplifying signal
 SMOOTH = 3  # high value is slow fall
-FALLDOWN = 10  # high value is slow fall
+FALLDOWN = 7  # high value is slow fall
 FADESPEED = 5  # color change speed, high value is lsow speed
-RAINBOW = 3  # 255//BANDS  # gradient of colors for x axis
-SYM = True
-ROTATE =  True
+RAINBOW = 4  # 255//BANDS  # gradient of colors for x axis
+YRAINBOW = 20 # 255//BANDS  # gradient of colors for y axis
+SYM = False
+MAXDOT = True # draw max dot 
+BLACKSPEC = True
+
 
 
 def between0and1(val):
@@ -50,19 +53,24 @@ class NeoPixelMatrix:
     def render_spec(self, old_values, max_values):
         col_val = (self.cnt//FADESPEED)
         for x in range(BANDS):
+            col_val += RAINBOW
             if SYM:   
-                col_val += RAINBOW
                 for i in range(old_values[x]//2):
-                    self.matrix.draw_pixel(x, i+BANDS//2, wheel((col_val) % 255), rotate=ROTATE)
-                    self.matrix.draw_pixel(x, BANDS//2-i, wheel((col_val) % 255), rotate=ROTATE)
-                self.matrix.draw_pixel(x, max_values[x]//2+BANDS//2, [255, 0, 0], rotate=ROTATE)
-                self.matrix.draw_pixel(x, BANDS//2-max_values[x]//2, [255, 0, 0], rotate=ROTATE)
+                    color = [0,0,0] if BLACKSPEC else wheel((col_val+YRAINBOW*i) % 255)
+                    self.matrix.draw_pixel(x, i+BANDS//2, color, rot_y=True)
+                    self.matrix.draw_pixel(x, BANDS//2-i, color, rot_y=True)
+                if MAXDOT:
+                    self.matrix.draw_pixel(x, max_values[x]//2+BANDS//2, [255, 0, 0], rot_y=True)
+                    self.matrix.draw_pixel(x, BANDS//2-max_values[x]//2, [255, 0, 0], rot_y=True)
 
             if not SYM:
-                col_val += RAINBOW
                 for i in range(old_values[x]):
-                    self.matrix.draw_pixel(x, i, wheel(col_val % 255), rotate=ROTATE)
-                self.matrix.draw_pixel(x, max_values[x], [255, 0, 0], rotate=ROTATE)
+                    color = [0,0,0] if BLACKSPEC else wheel((col_val+ YRAINBOW*i)% 255) 
+                    self.matrix.draw_pixel(x, i, color , rot_x=True, rot_y=True)
+                if MAXDOT:
+                    self.matrix.draw_pixel(x, max_values[x], [255, 0, 0], rot_x=True, rot_y=True)
+
+
 
     def show(self):
         self.cnt += 1
@@ -74,7 +82,7 @@ class NeoPixelMatrix:
 
     def render_animation(self, dots):
         for dot in dots:
-            self.matrix.draw_pixel(int(dot[0]), int(dot[1]), dot[2], rotate=ROTATE)
+            self.matrix.draw_pixel(int(dot[0]), int(dot[1]), dot[2], rot_x=True, rot_y=True)
         
 
 
@@ -166,7 +174,8 @@ if __name__ == '__main__':
         # render to led matrix
 
         neopixelmatrix.clear()
-        neopixelmatrix.render_animation(animations.get_animation(neopixelmatrix.cnt, func='random'))
-        # neopixelmatrix.render_animation(animations.get_animation(neopixelmatrix.cnt, func='onair'))
+        # neopixelmatrix.render_animation(animations.get_animation( func='men', beat=data[0]))
+        # neopixelmatrix.render_animation(animations.get_animation(func='onair', beat=data[2]))
+        neopixelmatrix.render_animation(animations.get_animation(func='random', beat=data[1]))
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
         neopixelmatrix.show()

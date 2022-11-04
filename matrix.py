@@ -33,9 +33,13 @@ class Matrix():
 
 
 
-    def draw_pixel(self, x, y, color, rotate=False):
-        if rotate:
+    def draw_pixel(self, x, y, color, invert=False, rot_x=False, rot_y=False):
+        if invert:
             x,y = y,x
+        if rot_x:
+            x = BANDS -x - 1
+        if rot_y:
+            y = BANDS - y - 1
         self.pixel_framebuf.pixel(x, y, self.map_color(color))
 
     def draw_fill(self, color):
