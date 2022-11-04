@@ -15,18 +15,18 @@ CHANNELS = 1
 RATE = 44100  # in Hz
 BANDS = 16 # number of pixel cols
 DEVICE_INDEX = 2 # audio interface
-FREQ_AREA = 20  # win size of raw data
+
+FREQ_AREA = 20  # win size of raw data --> change in UI
 WIN_SIZE = FREQ_AREA/BANDS # size of array for one band at matrix
-BOOST = 2.5 # amplifying signal
-SMOOTH = 3  # high value is slow fall
-FALLDOWN = 7  # high value is slow fall
-FADESPEED = 5  # color change speed, high value is lsow speed
-RAINBOW = 4  # 255//BANDS  # gradient of colors for x axis
-YRAINBOW = 20 # 255//BANDS  # gradient of colors for y axis
-SYM = True
-MAXDOT = True# draw max dot 
-BLACKSPEC = False
-CENTER = True
+SMOOTH = 3  # high value is slow fall --> change in UI
+FALLDOWN = 7  # high value is slow fall --> change in UI
+FADESPEED = 5  # color change speed, high value is lsow speed --> change in UI
+RAINBOW = 4  # 255//BANDS  # gradient of colors for x axis --> change in UI
+YRAINBOW = 20 # 255//BANDS  # gradient of colors for y axis --> change in UI
+SYM = True # --> change in UI
+MAXDOT = True# draw max dot  --> change in UI
+BLACKSPEC = False # --> change in UI
+CENTER = False # when sym is true, drw center or borders --> change in UI
 
 
 
