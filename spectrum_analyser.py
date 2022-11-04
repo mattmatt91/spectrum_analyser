@@ -15,7 +15,7 @@ CHANNELS = 1
 RATE = 44100  # in Hz
 BANDS = 16 # number of pixel cols
 DEVICE_INDEX = 2 # audio interface
-FREQ_AREA = 30  # win size of raw data
+FREQ_AREA = 20  # win size of raw data
 WIN_SIZE = FREQ_AREA/BANDS # size of array for one band at matrix
 BOOST = 2.5 # amplifying signal
 SMOOTH = 3  # high value is slow fall
@@ -23,9 +23,10 @@ FALLDOWN = 7  # high value is slow fall
 FADESPEED = 5  # color change speed, high value is lsow speed
 RAINBOW = 4  # 255//BANDS  # gradient of colors for x axis
 YRAINBOW = 20 # 255//BANDS  # gradient of colors for y axis
-SYM = False
-MAXDOT = True # draw max dot 
-BLACKSPEC = True
+SYM = True
+MAXDOT = True# draw max dot 
+BLACKSPEC = False
+CENTER = True
 
 
 
@@ -57,11 +58,19 @@ class NeoPixelMatrix:
             if SYM:   
                 for i in range(old_values[x]//2):
                     color = [0,0,0] if BLACKSPEC else wheel((col_val+YRAINBOW*i) % 255)
-                    self.matrix.draw_pixel(x, i+BANDS//2, color, rot_y=True)
-                    self.matrix.draw_pixel(x, BANDS//2-i, color, rot_y=True)
+                    if CENTER:
+                        self.matrix.draw_pixel(x, i+BANDS//2-1, color, invert=True, rot_y=True)
+                        self.matrix.draw_pixel(x, BANDS//2-i, color, invert=True, rot_y=True)
+                    else:
+                        self.matrix.draw_pixel(x, i, color, invert=True, rot_y=True)
+                        self.matrix.draw_pixel(x, BANDS-i-1, color, invert=True, rot_y=True)
                 if MAXDOT:
-                    self.matrix.draw_pixel(x, max_values[x]//2+BANDS//2, [255, 0, 0], rot_y=True)
-                    self.matrix.draw_pixel(x, BANDS//2-max_values[x]//2, [255, 0, 0], rot_y=True)
+                    if CENTER:
+                        self.matrix.draw_pixel(x, max_values[x]//2+BANDS//2-1, [255, 0, 0], invert=True, rot_y=True)
+                        self.matrix.draw_pixel(x, BANDS//2-max_values[x]//2, [255, 0, 0], invert=True, rot_y=True)
+                    else:
+                        self.matrix.draw_pixel(x, max_values[x]//2, [255, 0, 0], invert=True, rot_y=True)
+                        self.matrix.draw_pixel(x, BANDS-max_values[x]//2 -1, [255, 0, 0], invert=True, rot_y=True)
 
             if not SYM:
                 for i in range(old_values[x]):
@@ -126,7 +135,7 @@ class Stream(object):
             # input_device_index=DEVICE_INDEX
         )
         self.check_devices()
-        self.flag = True  # for test mode
+        self.max_val = 0
 
     def check_devices(self):
         info = self.p.get_host_api_info_by_index(0)
@@ -143,15 +152,24 @@ class Stream(object):
         dataFFT = np.abs(np.fft.fft(dataInt))*2/(11000*CHUNK)
         return dataInt, dataFFT
 
+
+    def map_ln(self, val):
+        val = 0 if val < 0 else val
+        val = (log(val)+4)/4
+        return val
+
     def map_data(self, dataFFT):
         normalised = []
+        raw = []
         for band in range(BANDS):
             sub_arr = cut_sub_array(dataFFT, band)
             val = np.max(sub_arr)
-            val = (1 - log(val + 1, (2.5)))*val*BOOST
-            val = between0and1(val)
+            raw.append(val)
+            if val > self.max_val:
+                self.max_val = val
+            val = val/self.max_val
+            val = self.map_ln(val) # fit to signal
             normalised.append(int(val*(BANDS)))
-
         return normalised
 
 
@@ -174,8 +192,8 @@ if __name__ == '__main__':
         # render to led matrix
 
         neopixelmatrix.clear()
-        # neopixelmatrix.render_animation(animations.get_animation( func='men', beat=data[0]))
         # neopixelmatrix.render_animation(animations.get_animation(func='onair', beat=data[2]))
-        neopixelmatrix.render_animation(animations.get_animation(func='random', beat=data[1]))
+        # neopixelmatrix.render_animation(animations.get_animation(func='random', beat=data[1]))
+        # neopixelmatrix.render_animation(animations.get_animation( func='men', beat=data[0]))
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
         neopixelmatrix.show()
