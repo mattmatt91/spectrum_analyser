@@ -45,7 +45,6 @@ class NeoPixelMatrix:
         self.matrix = Matrix()
         self.cnt = 0
 
-
     def render_spec(self, old_values, max_values):
         self.matrix.clear()
         col_val = (self.cnt//FADESPEED)
@@ -60,11 +59,9 @@ class NeoPixelMatrix:
         self.matrix.show()
 
     def render_animation(self, func):
-        for i in func(self.cnt):
-            try:
-                self.matrix.draw_pixel(int(i[0]), int(i[1]), [255, 0, 0])
-            except:
-                print('pixel not in range: ')
+        dots = self.matrix.animations.get_animation(self.cnt, func)
+        for dot in dots:
+            self.matrix.draw_pixel(int(dot[0]), int(dot[1]), [255, 0, 0])
         
 
 
@@ -141,7 +138,6 @@ if __name__ == '__main__':
     stream = Stream()
     visualization = Visualization()
     neopixelmatrix = NeoPixelMatrix()
-    animations = Animations()
 
     while True:
         # get data from audio interface
@@ -157,7 +153,7 @@ if __name__ == '__main__':
 
         neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
         
-        neopixelmatrix.render_animation(animations.get_man)
+        neopixelmatrix.render_animation(func='men')
 
 
         neopixelmatrix.show()

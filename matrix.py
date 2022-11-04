@@ -8,6 +8,7 @@ import neopixel_spi as neopixel
 import math
 from adafruit_pixel_framebuf import PixelFramebuffer
 from PIL import Image
+from animated_figs import Animations
 
 dev = usb.core.find(idVendor=0x0403, idProduct=0x6014)
 PIXEL_ORDER = neopixel.GRB
@@ -25,10 +26,11 @@ class Matrix():
                                             pixel_order=PIXEL_ORDER,
                                             auto_write=False)
         self.pixel_framebuf = PixelFramebuffer(
-            self.pixels,
-            BANDS,
-            BANDS,
-            reverse_x=False,)
+                                            self.pixels,
+                                            BANDS,
+                                            BANDS,
+                                            reverse_x=False,)
+        self.animations = Animations(BANDS)
 
     def draw_pixel(self, x, y, color):
         self.pixel_framebuf.pixel(x, y, self.map_color(color))
