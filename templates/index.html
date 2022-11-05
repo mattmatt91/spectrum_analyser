@@ -2,14 +2,80 @@
 {% block content %}
 <div>
 	<row>
-		<button id="On" class="btn btn-default">On</button>
-		<button id="Off" class="btn">Off</button>
-		<label id="thecolor">On</label>
+		<div><label>brightness</label>
+			<input type="range" id="brightness" min="0" max="100">
+			<label id="thebrightness">30</label>
+		</div>
 	</row>
 	<row>
-		<input type="range" id="freqarea" name="f_area" min="0" max="100">
-		<label id="thefreqarea">30</label>
+		<div><label>freqarea</label>
+			<input type="range" id="freqarea" min="0" max="100">
+			<label id="thefreqarea">30</label>
+		</div>
 	</row>
+	<row>
+		<div><label>smooth</label>
+			<input type="range" id="smooth" min="0" max="100">
+			<label id="thesmooth">30</label>
+		</div>
+	</row>
+	<row>
+		<div><label>falldown</label>
+			<input type="range" id="falldown" min="0" max="100">
+			<label id="thefalldown">30</label>
+		</div>
+	</row>
+	<row>
+		<div><label>fadespeed</label>
+			<input type="range" id="fadespeed" min="0" max="100">
+			<label id="thefadespeed">30</label>
+		</div>
+	</row>
+	<row>
+		<div><label>rainbow</label>
+			<input type="range" id="rainbow" min="0" max="100">
+			<label id="therainbow">30</label>
+		</div>
+	</row>
+	<row>
+		<div><label>yrainbow</label>
+			<input type="range" id="yrainbow" min="0" max="100">
+			<label id="theyrainbow">30</label>
+		</div>
+	</row>
+	<row>
+		<div><label>smooth</label>
+			<input type="range" id="smooth" min="0" max="100">
+			<label id="thesmooth">30</label>
+		</div>
+	</row>
+	<row>
+		<div><label>sym</label>
+			<input type="range" id="sym" min="0" max="100">
+			<label id="thesym">1</label>
+		</div>
+	</row>
+	<row>
+		<div><label>maxdot</label>
+			<input type="range" id="maxdot" min="0" max="100">
+			<label id="themaxdot">1</label>
+		</div>
+	</row>
+	<row>
+		<div><label>blackspec</label>
+			<input type="range" id="blackspec" min="0" max="100">
+			<label id="theblackspec">1</label>
+		</div>
+	</row>
+	<row>
+		<div><label>center</label>
+			<input type="range" id="center" min="0" max="100">
+			<label id="thecenter">1</label>
+		</div>
+	</row>
+
+
+
 </div>
 
 {% endblock %}
@@ -23,21 +89,82 @@
 <script>
 
 
-	$("#On").click(function () {
-		$.get('/on', function (data, status) {
-			$("#thecolor").text(data.result);
-		});
-	});
 
-	$("#Off").click(function () {
-		$.get('/off', function (data, status) {
-			$("#thecolor").text(data.result);
+
+	$("#brightness").change(function (val) {
+		var slider = document.getElementById("brightness").value;
+		$.get('/brightness/' + slider, function (data, status) {
+			$("#thebrightness").text(data.result);
 		});
 	});
 
 	$("#freqarea").change(function (val) {
-		$.get('/freqarea/' +val, function (data, status) {
+		var slider = document.getElementById("freqarea").value;
+		$.get('/freqarea/' + slider, function (data, status) {
 			$("#thefreqarea").text(data.result);
+		});
+	});
+
+	$("#smooth").change(function (val) {
+		var slider = document.getElementById("smooth").value;
+		$.get('/smooth/' + slider, function (data, status) {
+			$("#thesmooth").text(data.result);
+		});
+	});
+
+	$("#falldown").change(function (val) {
+		var slider = document.getElementById("falldown").value;
+		$.get('/falldown/' + slider, function (data, status) {
+			$("#thefalldown").text(data.result);
+		});
+	});
+
+	$("#fadespeed").change(function (val) {
+		var slider = document.getElementById("fadespeed").value;
+		$.get('/fadespeed/' + slider, function (data, status) {
+			$("#thefadespeed").text(data.result);
+		});
+	});
+
+	$("#rainbow").change(function (val) {
+		var slider = document.getElementById("rainbow").value;
+		$.get('/rainbow/' + slider, function (data, status) {
+			$("#therainbow").text(data.result);
+		});
+	});
+
+	$("#yrainbow").change(function (val) {
+		var slider = document.getElementById("yrainbow").value;
+		$.get('/yrainbow/' + slider, function (data, status) {
+			$("#theyrainbow").text(data.result);
+		});
+	});
+
+	$("#sym").change(function (val) {
+		var slider = document.getElementById("sym").value;
+		$.get('/sym/' + slider, function (data, status) {
+			$("#thesym").text(data.result);
+		});
+	});
+
+	$("#maxdot").change(function (val) {
+		var slider = document.getElementById("maxdot").value;
+		$.get('/maxdot/' + slider, function (data, status) {
+			$("#themaxdot").text(data.result);
+		});
+	});
+
+	$("#blackspec").change(function (val) {
+		var slider = document.getElementById("blackspec").value;
+		$.get('/blackspec/' + slider, function (data, status) {
+			$("#theblackspec").text(data.result);
+		});
+	});
+
+	$("#center").change(function (val) {
+		var slider = document.getElementById("center").value;
+		$.get('/center/' + slider, function (data, status) {
+			$("#thecenter").text(data.result);
 		});
 	});
 

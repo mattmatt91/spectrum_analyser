@@ -13,6 +13,7 @@ RATE = 44100  # in Hz
 BANDS = 16 # number of pixel cols
 DEVICE_INDEX = 2 # audio interface
 
+BRIGHTNESS = 0.1
 FREQ_AREA = 20  # win size of raw data --> change in UI
 WIN_SIZE = FREQ_AREA/BANDS # size of array for one band at matrix
 SMOOTH = 3  # high value is slow fall --> change in UI
@@ -24,7 +25,6 @@ SYM = True # --> change in UI
 MAXDOT = True# draw max dot  --> change in UI
 BLACKSPEC = False # --> change in UI
 CENTER = False # when sym is true, drw center or borders --> change in UI
-
 
 
 def between0and1(val):
@@ -151,17 +151,17 @@ class Stream(object):
 
 
     def map_ln(self, val):
-        val = 0 if val < 0 else val
+        val = 0 if val <= 0 else val
+        if val == 0:
+            return 0
         val = (log(val)+4)/4
         return val
 
     def map_data(self, dataFFT):
         normalised = []
-        raw = []
         for band in range(BANDS):
             sub_arr = cut_sub_array(dataFFT, band)
             val = np.max(sub_arr)
-            raw.append(val)
             if val > self.max_val:
                 self.max_val = val
             val = val/self.max_val
@@ -177,6 +177,59 @@ class Frame():
         self.visualization = Visualization()
         self.neopixelmatrix = NeoPixelMatrix()
         self.animations = Animations()
+
+    def set_brightness(self, val):
+        print(val)
+        val = int(val)/100
+        print(val)
+
+        self.neopixelmatrix.matrix.pixels.brightness  = val
+    
+
+
+    def set_freq_area(self, val):
+        # val = 
+        global FREQ_AREA
+        FREQ_AREA = val 
+        global WIN_SIZE
+        WIN_SIZE = FREQ_AREA/BANDS 
+    
+    def set_smooth(self, val):
+        global SMOOTH 
+        SMOOTH = val 
+
+    def set_falldown(self, val):
+        global FALLDOWN
+        FALLDOWN = val 
+        
+    def set_fadespeed(self, val):
+        global FADESPEED
+        FADESPEED = val
+         
+    def set_rainbow(self, val):
+        global RAINBOW
+        RAINBOW = val
+    
+    def set_yrainbow(self, val):
+        global YRAINBOW
+        YRAINBOW = val
+    
+    def set_sym(self, val):
+        global SYM
+        SYM = val
+    
+    def set_maxdot(self, val):
+        global MAXDOT
+        MAXDOT = val
+    
+    def set_blackspec(self, val):
+        global BLACKSPEC
+        BLACKSPEC = val
+
+    def set_center(self, val):
+        global CENTER 
+        CENTER = val
+
 
     def update(self):
         while True:
