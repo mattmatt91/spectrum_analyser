@@ -1,0 +1,8 @@
+#!/bin/bash
+# This hook is sourced after this virtualenv is activated.
+#
+
+export FLASK_APP=main.py
+export FLASK_DEBUG=1
+export OLDPYTHONPATH=$PYTHONPATH
+export PYTHONPATH=${PYTHONPATH}:/home/pi/projects/leds

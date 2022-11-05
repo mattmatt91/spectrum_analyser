@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+	<row>
+		<button id="On" class="btn btn-default">On</button>
+		<button id="Off" class="btn">Off</button>
+		<label id="thecolor">On</label>
+	</row>
+	<row>
+		<input type="range" id="freqarea" name="f_area" min="0" max="100">
+		<label id="thefreqarea">30</label>
+	</row>
+</div>
+
+{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/spectrum.css') }}">
+{% endblock %}
+
+{% block extra_end_scripts %}
+<script src="{{ url_for('static', filename='js/spectrum.js')}}"></script>
+<script>
+
+
+	$("#On").click(function () {
+		$.get('/on', function (data, status) {
+			$("#thecolor").text(data.result);
+		});
+	});
+
+	$("#Off").click(function () {
+		$.get('/off', function (data, status) {
+			$("#thecolor").text(data.result);
+		});
+	});
+
+	$("#freqarea").change(function (val) {
+		$.get('/freqarea/' +val, function (data, status) {
+			$("#thefreqarea").text(data.result);
+		});
+	});
+
+</script>
+{% endblock %}

@@ -1,11 +1,8 @@
-from cProfile import label
-from locale import normalize
+
 import numpy as np
 import pyaudio as pa
 import struct
-import matplotlib.pyplot as plt
-import time
-from math import log10, log
+from math import log
 from matrix import Matrix, wheel
 from animated_figs import Animations
 
@@ -173,27 +170,34 @@ class Stream(object):
         return normalised
 
 
+
+class Frame():
+    def __init__(self) -> None:
+        self.stream = Stream()
+        self.visualization = Visualization()
+        self.neopixelmatrix = NeoPixelMatrix()
+        self.animations = Animations()
+
+    def update(self):
+        while True:
+            # get data from audio interface
+            dataInt, dataFFT = self.stream.get_data()
+
+            # process data
+            data = self.stream.map_data(dataFFT)
+
+            # update visualization
+            self.visualization.update(self.neopixelmatrix.cnt, data)
+
+            # render to led matrix
+
+            self.neopixelmatrix.clear()
+            # self.neopixelmatrix.render_animation(self.animations.get_animation(func='onair', beat=data[2]))
+            # self.neopixelmatrix.render_animation(self.animations.get_animation(func='random', beat=data[1]))
+            # self.neopixelmatrix.render_animation(self.animations.get_animation( func='men', beat=data[0]))
+            self.neopixelmatrix.render_spec(self.visualization.old_vals, self.visualization.max_vals)
+            self.neopixelmatrix.show()
+
 if __name__ == '__main__':
-    stream = Stream()
-    visualization = Visualization()
-    neopixelmatrix = NeoPixelMatrix()
-    animations = Animations()
-
-    while True:
-        # get data from audio interface
-        dataInt, dataFFT = stream.get_data()
-
-        # process data
-        data = stream.map_data(dataFFT)
-
-        # update visualization
-        visualization.update(neopixelmatrix.cnt, data)
-
-        # render to led matrix
-
-        neopixelmatrix.clear()
-        # neopixelmatrix.render_animation(animations.get_animation(func='onair', beat=data[2]))
-        # neopixelmatrix.render_animation(animations.get_animation(func='random', beat=data[1]))
-        # neopixelmatrix.render_animation(animations.get_animation( func='men', beat=data[0]))
-        neopixelmatrix.render_spec(visualization.old_vals, visualization.max_vals)
-        neopixelmatrix.show()
+    frame = Frame()
+    frame.update()

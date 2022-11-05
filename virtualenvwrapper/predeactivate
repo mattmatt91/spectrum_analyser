@@ -1,0 +1,6 @@
+#!/bin/bash
+# This hook is sourced before this virtualenv is deactivated.
+
+export PYTHONPATH=${OLDPYTHONPATH}
+unset FLASK_APP
+unset FLASK_DEBUG
