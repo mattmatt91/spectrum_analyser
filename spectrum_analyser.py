@@ -13,6 +13,19 @@ RATE = 44100  # in Hz
 BANDS = 16  # number of pixel cols
 DEVICE_INDEX = 2  # audio interface
 
+BRIGHTNESS = 0.1
+FREQ_AREA = 20  # win size of raw data --> change in UI
+WIN_SIZE = FREQ_AREA/BANDS  # size of array for one band at matrix
+SMOOTH = 3  # high value is slow fall --> change in UI
+FALLDOWN = 7  # high value is slow fall --> change in UI
+FADESPEED = 10  # color change speed, high value is lsow speed --> change in UI
+RAINBOW = 10  # 255//BANDS  # gradient of colors for x axis --> change in UI
+YRAINBOW = 20  # 255//BANDS  # gradient of colors for y axis --> change in UI
+SYM = False  # --> change in UI
+MAXDOT = True  # draw max dot  --> change in UI
+BLACKSPEC = False  # --> change in UI
+CENTER = True  # when sym is true, drw center or borders --> change in UI
+
 
 def between0and1(val):
     if val >= 1:
@@ -176,34 +189,54 @@ class Stream(object):
 
 
 class Frame():
-    BRIGHTNESS = 0.1
+    BRIGHTNESS = BRIGHTNESS
+    FREQ_AREA = FREQ_AREA
+    WIN_SIZE = WIN_SIZE
+    SMOOTH = SMOOTH
+    FALLDOWN = FALLDOWN
+    FADESPEED = FADESPEED
+    RAINBOW = RAINBOW
+    YRAINBOW = YRAINBOW
+    SYM = SYM
+    MAXDOT = MAXDOT
+    BLACKSPEC = BLACKSPEC
+    CENTER = CENTER
 
-    FREQ_AREA = 20  # win size of raw data --> change in UI
-    WIN_SIZE = FREQ_AREA/BANDS  # size of array for one band at matrix
-    SMOOTH = 3  # high value is slow fall --> change in UI
-    FALLDOWN = 7  # high value is slow fall --> change in UI
-    FADESPEED = 10  # color change speed, high value is lsow speed --> change in UI
-    RAINBOW = 10  # 255//BANDS  # gradient of colors for x axis --> change in UI
-    YRAINBOW = 20  # 255//BANDS  # gradient of colors for y axis --> change in UI
-    SYM = False  # --> change in UI
-    MAXDOT = True  # draw max dot  --> change in UI
-    BLACKSPEC = False  # --> change in UI
-    CENTER = True  # when sym is true, drw center or borders --> change in UI
 
     def __init__(self) -> None:
         self.stream = Stream()
         self.visualization = Visualization()
         self.neopixelmatrix = NeoPixelMatrix()
         self.animations = Animations()
+        self.animations_list = self.animations.get_list()
+        self.animation = 'moodulo'
+        self.render_spec = True
+        self.render_animation = False
 
     def set_brightness(self, val):
-        val = mapping_to_range(val, 0, 1, float)
+        val = mapping_to_range(val, 0, 0.2, float)
         self.neopixelmatrix.matrix.pixels.brightness = val
+        return val
+
+    def set_animation(self, val):
+        val = mapping_to_range(val, 0, len(self.animations_list), int)
+        self.animation = self.animations_list[val-1]
+        print(self.animation)
+        return self.animation
+    
+    def set_render_spec(self, val):
+        val = mapping_to_range(val, 0, 1, bool)
+        self.render_spec = val
+        return val
+    
+    def set_render_animation(self, val):
+        val = mapping_to_range(val, 0, 1, bool)
+        self.render_animation = val
         return val
 
     @classmethod
     def set_freq_area(cls, val):
-        val = mapping_to_range(val, BANDS, 200, int)
+        val = mapping_to_range(val, BANDS, 100, int)
         cls.FREQ_AREA = val
         cls.WIN_SIZE = Frame.FREQ_AREA/BANDS
         return val
@@ -272,15 +305,17 @@ class Frame():
 
             # update visualization
             self.visualization.update(self.neopixelmatrix.cnt, data)
+
             # render to led matrix
             self.neopixelmatrix.clear()
-            # self.neopixelmatrix.render_animation(self.animations.get_animation(func='onair', beat=data[2]))
-            # self.neopixelmatrix.render_animation(self.animations.get_animation(func='modulo', beat=data[2]))
-            # self.neopixelmatrix.render_animation(
-            # self.animations.get_animation(func='random', beat=data[1]))
-            # self.neopixelmatrix.render_animation(self.animations.get_animation( func='men', beat=data[0]))
-            self.neopixelmatrix.render_spec(
-                self.visualization.old_vals, self.visualization.max_vals)
+            # render animation
+            if self.render_animation:
+                self.neopixelmatrix.render_animation(
+                    self.animations.get_animation(func=self.animation, beat=data[2]))
+            # render spec
+            if self.render_spec:
+                self.neopixelmatrix.render_spec(
+                    self.visualization.old_vals, self.visualization.max_vals)
             self.neopixelmatrix.show()
 
 

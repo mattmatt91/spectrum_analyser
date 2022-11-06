@@ -4,7 +4,25 @@
 	<row>
 		<div><label>brightness</label>
 			<input type="range" id="brightness" min="0" max="100">
-			<label id="thebrightness">30</label>
+			<label id="thebrightness">0</label>
+		</div>
+	</row>
+	<row>
+		<div><label>animation</label>
+			<input type="range" id="animation" min="0" max="100">
+			<label id="theanimation">0</label>
+		</div>
+	</row>
+	<row>
+		<div><label>render_animation</label>
+			<input type="range" id="render_animation" min="0" max="100">
+			<label id="therender_animation">0</label>
+		</div>
+	</row>
+	<row>
+		<div><label>render_spec</label>
+			<input type="range" id="render_spec" min="0" max="100">
+			<label id="therender_spec">0</label>
 		</div>
 	</row>
 	<row>
@@ -89,6 +107,27 @@
 		var slider = document.getElementById("brightness").value;
 		$.get('/brightness/' + slider, function (data, status) {
 			$("#thebrightness").text(data.result);
+		});
+	});
+
+	$("#animation").change(function (val) {
+		var slider = document.getElementById("animation").value;
+		$.get('/animation/' + slider, function (data, status) {
+			$("#theanimation").text(data.result);
+		});
+	});
+
+	$("#render_animation").change(function (val) {
+		var slider = document.getElementById("render_animation").value;
+		$.get('/render_animation/' + slider, function (data, status) {
+			$("#therender_animation").text(data.result);
+		});
+	});
+
+	$("#render_spec").change(function (val) {
+		var slider = document.getElementById("render_spec").value;
+		$.get('/render_spec/' + slider, function (data, status) {
+			$("#therender_spec").text(data.result);
 		});
 	});
 

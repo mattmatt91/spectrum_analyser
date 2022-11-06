@@ -75,6 +75,9 @@ class Animations():
         elif  self.beat_detect and beat < SIZE//2:
             self.beat_detect = False
 
+    def get_list(self):
+        return ['random', 'men', 'onair', 'modulo']
+
     def get_animation(self, func, beat):
         self.update_beat_cnt(beat)
         if func == 'random':
