@@ -16,7 +16,7 @@ def init_man():
         max_x = max(x)
         max_y = max(y)
         color = [[0,255,0] for _ in range(len(x))]
-        man = [[ix, iy+5, c] for ix, iy, c in zip(x,y,color)]
+        man = [[ix-4, iy+5, c] for ix, iy, c in zip(x,y,color)]
         men.append(man)
     return men
 
@@ -83,6 +83,8 @@ class Animations():
             return self.get_man()
         if func == 'onair':
             return self.get_onair()
+        if func == 'modulo':
+            return  self.get_modulo()
         else:
             print('prog not available')
 
@@ -95,6 +97,14 @@ class Animations():
                     self.buffer.append([x,y, color])
 
         return self.buffer
+
+    def get_modulo(self):
+        dots = []
+        for x in range(SIZE):
+            for y in range(SIZE):
+                color = [((self.cnt)//20*(y+1)*(x+1))%255,0,0] # wheel((self.cnt*(y+1)*(x+1))%50)
+                dots.append([x,y, color])
+        return dots
     
     def get_onair(self):
         if self.step%2 == 0:
