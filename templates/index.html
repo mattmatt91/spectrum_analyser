@@ -15,24 +15,16 @@
 
 
 <script>
-
-
 	function init_item(name, data) {
 		var my_row = document.createElement('div');
 		my_row.setAttribute('class', 'row');
 
-		// create label text
-		let my_col1 = document.createElement('div');
-		my_col1.setAttribute('class', 'col');
 		let label_txt = document.createElement('output');
 		label_txt.value = name;
 		label_txt.type = 'label';
 		my_row.appendChild(label_txt);
 		
-		
 		// create slider
-		let my_col2 = document.createElement('div');
-		my_col2.setAttribute('class', 'col');
 		let control = document.createElement('input');
 		control.type = "range";
 		control.value = data[name];
@@ -43,34 +35,25 @@
 			});
 		});
 		my_row.appendChild(control);
-		
+	
 		// create label val
-		let my_col3 = document.createElement('div');
-		my_col3.setAttribute('class', 'col');
 		let label_val = document.createElement('output');
 		label_val.type = 'label';
-		label_val.value = 543;
+		label_val.value = data[name];
 		my_row.appendChild(label_val);
 
 		document.getElementById('control').appendChild(my_row);
 	};
-	
-	
-	
-	
-	let features = []
+
 	function build_page() {
 		$.get('/data/', function (data, status) {
 			for (var key in data) {
 				init_item(key, data)
 			};
 		});
-
 	}
 
-
 	window.onload = build_page
-
 
 </script>
 {% endblock %}
