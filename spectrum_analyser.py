@@ -14,8 +14,8 @@ BANDS = 16  # number of pixel cols
 DEVICE_INDEX = 2  # audio interface
 
 BRIGHTNESS = 0.1
-FREQ_AREA = 20  # win size of raw data --> change in UI
-WIN_SIZE = FREQ_AREA/BANDS  # size of array for one band at matrix
+FREQAREA = 20  # win size of raw data --> change in UI
+WINSIZE = FREQAREA/BANDS  # size of array for one band at matrix
 SMOOTH = 3  # high value is slow fall --> change in UI
 FALLDOWN = 7  # high value is slow fall --> change in UI
 FADESPEED = 10  # color change speed, high value is lsow speed --> change in UI
@@ -37,8 +37,8 @@ def between0and1(val):
 
 
 def cut_sub_array(dataFFT, band):
-    start = int(Frame.WIN_SIZE*band)
-    stop = int(Frame.WIN_SIZE*(band+1))
+    start = int(Frame.WINSIZE*band)
+    stop = int(Frame.WINSIZE*(band+1))
     sub_arr = dataFFT[start:stop]
     return sub_arr
 
@@ -107,9 +107,10 @@ class NeoPixelMatrix:
         self.matrix.clear()
 
     def render_animation(self, dots):
-        for dot in dots:
-            self.matrix.draw_pixel(int(dot[0]), int(
-                dot[1]), dot[2], rot_x=True, rot_y=True)
+        if dots != None:
+            for dot in dots:
+                self.matrix.draw_pixel(int(dot[0]), int(
+                    dot[1]), dot[2], rot_x=True, rot_y=True)
 
 
 class Visualization():
@@ -190,8 +191,8 @@ class Stream(object):
 
 class Frame():
     BRIGHTNESS = BRIGHTNESS
-    FREQ_AREA = FREQ_AREA
-    WIN_SIZE = WIN_SIZE
+    FREQAREA = FREQAREA
+    WINSIZE = WINSIZE
     SMOOTH = SMOOTH
     FALLDOWN = FALLDOWN
     FADESPEED = FADESPEED
@@ -213,12 +214,50 @@ class Frame():
         self.render_spec = True
         self.render_animation = False
 
+        self.data = {'brigthness':self.BRIGHTNESS,
+                'freqarea':self.FREQAREA,
+                'smooth':self.SMOOTH,
+                'falldown':self.FALLDOWN,
+                'fadespeed':self.FADESPEED,
+                'rainbow':self.RAINBOW,
+                'yrainbow':self.YRAINBOW,
+                'sym':self.SYM,
+                'maxdot':self.MAXDOT,
+                'blackspec':self.BLACKSPEC,
+                'center': self.CENTER,
+                'animation':self.animation,
+                'render_spec':self.render_spec,
+                'render_animation':self.render_animation}
+
+        self.setter = {'brigthness':self.set_brightness,
+                'freqarea':self.set_freqarea,
+                'smooth':self.set_smooth,
+                'falldown':self.set_falldown,
+                'fadespeed':self.set_fadespeed,
+                'rainbow':self.set_rainbow,
+                'yrainbow':self.set_yrainbow,
+                'sym':self.set_sym,
+                'maxdot':self.set_maxdot,
+                'blackspec':self.set_blackspec,
+                'center': self.set_center,
+                'animation':self.set_animation,
+                'render_spec':self.set_render_spec,
+                'render_animation':self.set_render_animation}
+
+    def get_data(self):
+        return self.data
+        
+    def set_feature(self, feature, val):
+        val = self.setter[feature](val)
+        return val
+
     def set_brightness(self, val):
         val = mapping_to_range(val, 0, 0.2, float)
         self.neopixelmatrix.matrix.pixels.brightness = val
         return val
 
     def set_animation(self, val):
+        print('test')
         val = mapping_to_range(val, 0, len(self.animations_list), int)
         self.animation = self.animations_list[val-1]
         print(self.animation)
@@ -235,10 +274,10 @@ class Frame():
         return val
 
     @classmethod
-    def set_freq_area(cls, val):
+    def set_freqarea(cls, val):
         val = mapping_to_range(val, BANDS, 100, int)
-        cls.FREQ_AREA = val
-        cls.WIN_SIZE = Frame.FREQ_AREA/BANDS
+        cls.FREQAREA = val
+        cls.WINSIZE = Frame.FREQAREA/BANDS
         return val
 
     @classmethod
