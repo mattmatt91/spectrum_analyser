@@ -15,45 +15,82 @@
 
 
 <script>
-	function init_item(name, data) {
-		var my_row = document.createElement('div');
-		my_row.setAttribute('class', 'row');
 
-		let label_txt = document.createElement('output');
-		label_txt.value = name;
-		label_txt.type = 'label';
-		my_row.appendChild(label_txt);
+
+	function init_item(name, data) {
+		let items = []
 		
-		// create slider
+		// create label text
+
+		let label_txt = build_label(name);
+		let label_val = build_label(data[name]);
+		let control = build_control(name, data[name], label_val);
+
+		items.push(label_txt);
+		items.push(control);
+		items.push(label_val);
+
+		//document.getElementById('control').appendChild(my_row);
+		return items
+	};
+
+
+	function build_label(val) {
+		let label = document.createElement('output');
+		label.type = 'label';
+		label.value = val;
+		return label
+	}
+
+	function build_control(name, val, label_val) {
 		let control = document.createElement('input');
 		control.type = "range";
-		control.value = data[name];
+		control.value = val;
 		control.addEventListener("change", function () {
-			let val  = control.value
+			let val = control.value
 			$.get('/feature/' + name + '/' + val, function (val, status) {
-				label_val.value = val.result				
+				label_val.value = val.result
 			});
 		});
-		my_row.appendChild(control);
-	
-		// create label val
-		let label_val = document.createElement('output');
-		label_val.type = 'label';
-		label_val.value = data[name];
-		my_row.appendChild(label_val);
+		return control
+	}
 
-		document.getElementById('control').appendChild(my_row);
-	};
+
+
+
 
 	function build_page() {
 		$.get('/data/', function (data, status) {
+			let features = []
 			for (var key in data) {
-				init_item(key, data)
+				let feature = init_item(key, data)
+				features.push(feature)
+				// append_to_table(feature, tbl)
 			};
+			let tbl = tableCreate(features)
 		});
 	}
 
+	function tableCreate(features) {
+		const body = document.body,
+			tbl = document.createElement('table');
+		tbl.style.width = '100px';
+		//tbl.style.border = '1px solid black';
+		for (let row = 0; row < features.length; row++) {
+			const tr = tbl.insertRow();
+			for (let item = 0; item < features[row].length; item++) {
+					const td = tr.insertCell();
+					td.appendChild(features[row][item]);
+					//td.style.border = '1px solid black';
+					td.setAttribute('rowSpan', '1');			
+				}
+			}
+			document.getElementById('control').appendChild(tbl);
+	}
+
+
 	window.onload = build_page
+
 
 </script>
 {% endblock %}

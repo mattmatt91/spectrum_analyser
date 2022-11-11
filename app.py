@@ -19,7 +19,6 @@ def fetch_data():
 @app.route('/feature/<feature>/<value>', methods=['POST', 'GET'])
 def set_value(feature, value):
 	val = frame.set_feature(feature, value)
-	print(val)
 	return jsonify(result=val)
 
 
