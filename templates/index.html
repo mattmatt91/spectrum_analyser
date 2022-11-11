@@ -16,12 +16,8 @@
 
 <script>
 
-
 	function init_item(name, data) {
 		let items = []
-		
-		// create label text
-
 		let label_txt = build_label(name);
 		let label_val = build_label(data[name]);
 		let control = build_control(name, data[name], label_val);
@@ -30,10 +26,8 @@
 		items.push(control);
 		items.push(label_val);
 
-		//document.getElementById('control').appendChild(my_row);
 		return items
 	};
-
 
 	function build_label(val) {
 		let label = document.createElement('output');
@@ -55,19 +49,14 @@
 		return control
 	}
 
-
-
-
-
 	function build_page() {
 		$.get('/data/', function (data, status) {
 			let features = []
 			for (var key in data) {
-				let feature = init_item(key, data)
-				features.push(feature)
-				// append_to_table(feature, tbl)
+				let feature = init_item(key, data);
+				features.push(feature);
 			};
-			let tbl = tableCreate(features)
+			let tbl = tableCreate(features);
 		});
 	}
 
@@ -75,22 +64,19 @@
 		const body = document.body,
 			tbl = document.createElement('table');
 		tbl.style.width = '100px';
-		//tbl.style.border = '1px solid black';
 		for (let row = 0; row < features.length; row++) {
 			const tr = tbl.insertRow();
 			for (let item = 0; item < features[row].length; item++) {
-					const td = tr.insertCell();
-					td.appendChild(features[row][item]);
-					//td.style.border = '1px solid black';
-					td.setAttribute('rowSpan', '1');			
-				}
-			}
-			document.getElementById('control').appendChild(tbl);
+				const td = tr.insertCell();
+				td.appendChild(features[row][item]);
+				td.setAttribute('rowSpan', '1');
+			};
+		};
+		document.getElementById('control').appendChild(tbl);
 	}
-
 
 	window.onload = build_page
 
-
 </script>
+
 {% endblock %}
