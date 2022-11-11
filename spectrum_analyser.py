@@ -25,7 +25,9 @@ SYM = False  # --> change in UI
 MAXDOT = True  # draw max dot  --> change in UI
 BLACKSPEC = False  # --> change in UI
 CENTER = True  # when sym is true, drw center or borders --> change in UI
-
+ANIMATOIN = 'rings'
+RENDER_SPEC = False
+RENDER_ANIMATION = True
 
 def between0and1(val):
     if val >= 1:
@@ -210,9 +212,10 @@ class Frame():
         self.neopixelmatrix = NeoPixelMatrix()
         self.animations = Animations()
         self.animations_list = self.animations.get_list()
-        self.animation = 'moodulo'
-        self.render_spec = True
-        self.render_animation = False
+        self.animation = ANIMATOIN
+        self.render_spec = RENDER_SPEC
+        self.render_animation = RENDER_ANIMATION
+        self.QUIT = False
 
         self.data = {'brigthness':self.BRIGHTNESS,
                 'freqarea':self.FREQAREA,
@@ -227,7 +230,8 @@ class Frame():
                 'center': self.CENTER,
                 'animation':self.animation,
                 'render_spec':self.render_spec,
-                'render_animation':self.render_animation}
+                'render_animation':self.render_animation,
+                'quit':self.QUIT}
 
         self.setter = {'brigthness':self.set_brightness,
                 'freqarea':self.set_freqarea,
@@ -242,7 +246,8 @@ class Frame():
                 'center': self.set_center,
                 'animation':self.set_animation,
                 'render_spec':self.set_render_spec,
-                'render_animation':self.set_render_animation}
+                'render_animation':self.set_render_animation,
+                'quit':self.set_quit}
 
     def get_data(self):
         return self.data
@@ -272,6 +277,10 @@ class Frame():
         val = mapping_to_range(val, 0, 1, bool)
         self.render_animation = val
         return val
+    
+    def set_quit(self, val):
+        val = mapping_to_range(val, 0, 1, bool)
+        self.QUIT = val
 
     @classmethod
     def set_freqarea(cls, val):
@@ -334,8 +343,10 @@ class Frame():
         cls.CENTER = val
         return val
 
+    
+
     def update(self):
-        while True:
+        while not self.QUIT:
             # get data from audio interface
             dataInt, dataFFT = self.stream.get_data()
 
@@ -356,6 +367,7 @@ class Frame():
                 self.neopixelmatrix.render_spec(
                     self.visualization.old_vals, self.visualization.max_vals)
             self.neopixelmatrix.show()
+        print('frame stopped')
 
 
 if __name__ == '__main__':
