@@ -191,6 +191,7 @@ class Frame():
         self.neopixelmatrix = NeoPixelMatrix()
         self.animations = Animations()
         Frame.props['animation']['options'] = self.animations.get_list()
+        Frame.props['animation']['val'] = 'random'
 
 
 
