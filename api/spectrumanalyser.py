@@ -27,7 +27,7 @@ def between0and1(val):
 
 
 def cut_sub_array(dataFFT, band):
-    winsize = Frame.props['freqarea']['val'] // BANDS
+    winsize = int(Frame.props['freqarea']['val']) // BANDS
     start = int(winsize*band)
     stop = int(winsize*(band+1))
     sub_arr = dataFFT[start:stop]
@@ -54,11 +54,11 @@ class NeoPixelMatrix:
     def render_spec(self, old_values, max_values):
         col_val = (self.cnt//(int(Frame.props['fadespeed']['val'])+1))
         for x in range(BANDS):
-            col_val += Frame.props['rainbow']['val']
+            col_val += int(Frame.props['rainbow']['val'])
             if Frame.props['sym']['val']:
                 for i in range(old_values[x]//2):
                     color = [0, 0, 0] if Frame.props['blackspec']['val'] else wheel(
-                        (col_val+Frame.YRAINBOW*i) % 255)
+                        (col_val+int(Frame.props['yrainbow'])*i) % 255)
                     if Frame.props['center']['val']:
                         self.matrix.draw_pixel(
                             x, i+BANDS//2-1, color, invert=True, rot_y=True)
@@ -199,13 +199,19 @@ class Frame():
         return self.props
         
     def set_feature(self, feature, val):
-        self.props[feature]['val'] = val
-        return self.props[feature]['val']
+        Frame.props[feature]['val'] = val
+        print(Frame.props[feature]['val'])
+        return Frame.props[feature]['val']
+    
+
+    def update_features(self):
+            if round(int(Frame.props['brightness']['val'])/100,2) != self.neopixelmatrix.matrix.pixels.brightness:
+                self.neopixelmatrix.matrix.pixels.brightness =  round(int(Frame.props['brightness']['val'])/100,2)
 
     def update(self):
-        mytime = time()
-
         while True: #  mytime + 20 >= time():
+            self.update_features()
+
             # get data from audio interface
             dataInt, dataFFT = self.stream.get_data()
 
@@ -218,11 +224,11 @@ class Frame():
             # render to led matrix
             self.neopixelmatrix.clear()
             # render animation
-            if Frame.props['renderAnimation']:
+            if Frame.props['renderAnimation']['val']:
                 self.neopixelmatrix.render_animation(
                     self.animations.get_animation(func=Frame.props['animation']['val'], beat=data[2]))
             # render spec
-            if  Frame.props['renderSpec']:
+            if  Frame.props['renderSpec']['val']:
                 self.neopixelmatrix.render_spec(
                     self.visualization.old_vals, self.visualization.max_vals)
             self.neopixelmatrix.show()

@@ -8,12 +8,12 @@ interface BtnToggleProps {
 }
 
 export const BtnToggle: React.FC<BtnToggleProps> = ({ feature, featureName }) => {
-    const [value, setValue] = useState(feature.val)
+    const [newValue, setNewValue] = useState(feature.val)
     const changeHandler = () => {
-        setValue(!value)
+        setNewValue(!newValue)
+        const value = !newValue as boolean
         axios.post("/api/update_feature", { featureName, value }).then((response) => {
             console.log(response.data);
-            
           });
     }
 

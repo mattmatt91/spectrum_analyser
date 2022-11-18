@@ -22,6 +22,7 @@ def set_value():
 	feature_name = data['featureName']
 	feature_value = data['value']
 	frame.set_feature(feature_name, feature_value)
+	print({feature_name: feature_value})
 	return {feature_name: feature_value}
 
 

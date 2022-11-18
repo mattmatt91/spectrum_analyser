@@ -1,5 +1,5 @@
 {
-    "brightness": {"val":0.1, "options": [0,10]},
+    "brightness": {"val":1, "options": [0,100]},
     "freqarea": {"val":35, "options": [16,100]},
     "smooth": {"val":3, "options": [1,10]},
     "falldown": {"val":5, "options": [1,10]},
