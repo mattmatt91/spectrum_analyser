@@ -1,0 +1,16 @@
+{
+    "brightness": {"val":0.1, "options": [0,10]},
+    "freqarea": {"val":35, "options": [16,100]},
+    "smooth": {"val":3, "options": [1,10]},
+    "falldown": {"val":5, "options": [1,10]},
+    "fadespeed": {"val":1, "options": [1,10]},
+    "rainbow": {"val":0, "options": [0,15]},
+    "yrainbow": {"val":0, "options": [0,15]},
+    "sym": {"val":false, "options": [false,true]},
+    "maxdot": {"val":false, "options": [false,true]},
+    "blackspec": {"val":false, "options": [false,true]},
+    "center": {"val":false, "options": [false,true]},
+    "animation": {"val":"random", "options": ["None"]},
+    "renderSpec": {"val":false, "options": [false,true]},
+    "renderAnimation": {"val":false, "options": [false,true]}
+}
