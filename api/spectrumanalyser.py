@@ -52,7 +52,7 @@ class NeoPixelMatrix:
         self.cnt = 0
 
     def render_spec(self, old_values, max_values):
-        col_val = (self.cnt//(Frame.props['fadespeed']['val']+1))
+        col_val = (self.cnt//(int(Frame.props['fadespeed']['val'])+1))
         for x in range(BANDS):
             col_val += Frame.props['rainbow']['val']
             if Frame.props['sym']['val']:
@@ -114,7 +114,7 @@ class Visualization():
             if new >= old:
                 self.max_vals[i] = new
             else:
-                if cnt % Frame.props['falldown']['val'] == 0:
+                if cnt % int(Frame.props['falldown']['val']) == 0:
                     self.max_vals[i] = old - 1 if old > 0 else old
 
     def update_last(self, cnt,  new_data):
@@ -198,8 +198,8 @@ class Frame():
         return self.props
         
     def set_feature(self, feature, val):
-        self.props[feature] = val
-        return self.props[feature]
+        self.props[feature]['val'] = val
+        return self.props[feature]['val']
 
     def update(self):
         mytime = time()
@@ -218,7 +218,6 @@ class Frame():
             self.neopixelmatrix.clear()
             # render animation
             if Frame.props['renderAnimation']:
-                print(Frame.props['animation'])
                 self.neopixelmatrix.render_animation(
                     self.animations.get_animation(func=Frame.props['animation']['val'], beat=data[2]))
             # render spec
