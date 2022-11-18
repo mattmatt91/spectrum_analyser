@@ -8,7 +8,7 @@ import neopixel_spi as neopixel
 import math
 from adafruit_pixel_framebuf import PixelFramebuffer
 from PIL import Image
-from animated_figs import Animations
+from animations import Animations
 
 dev = usb.core.find(idVendor=0x0403, idProduct=0x6014)
 PIXEL_ORDER = neopixel.GRB

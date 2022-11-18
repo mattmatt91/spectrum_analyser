@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, jsonify
-import spectrum_analyser
+import spectrumanalyser
 from threading import Thread
 
 app = Flask(__name__)
-frame = spectrum_analyser.Frame()
+frame = spectrumanalyser.Frame()
 
 
 
