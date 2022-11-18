@@ -18,7 +18,6 @@ def fetch_data():
 
 @app.route('/update_feature', methods=['GET', 'POST'])
 def set_value():
-	print('test')
 	data = dict(request.json)
 	feature_name = data['featureName']
 	feature_value = data['value']

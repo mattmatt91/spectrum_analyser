@@ -205,7 +205,7 @@ class Frame():
     def update(self):
         mytime = time()
 
-        while mytime + 20 >= time():
+        while True: #  mytime + 20 >= time():
             # get data from audio interface
             dataInt, dataFFT = self.stream.get_data()
 
