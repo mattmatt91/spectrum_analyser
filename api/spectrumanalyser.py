@@ -58,7 +58,7 @@ class NeoPixelMatrix:
             if Frame.props['sym']['val']:
                 for i in range(old_values[x]//2):
                     color = [0, 0, 0] if Frame.props['blackspec']['val'] else wheel(
-                        (col_val+int(Frame.props['yrainbow'])*i) % 255)
+                        (col_val+int(Frame.props['yrainbow']['val'])*i) % 255)
                     if Frame.props['center']['val']:
                         self.matrix.draw_pixel(
                             x, i+BANDS//2-1, color, invert=True, rot_y=True)
@@ -84,7 +84,7 @@ class NeoPixelMatrix:
             if not Frame.props['sym']['val']:
                 for i in range(old_values[x]):
                     color = [0, 0, 0] if Frame.props['blackspec']['val'] else wheel(
-                        (col_val + Frame.props['yrainbow']['val']*i) % 255)
+                        (col_val + int(Frame.props['yrainbow']['val']*i)) % 255)
                     self.matrix.draw_pixel(x, i, color, rot_x=True, rot_y=True)
                 if Frame.props['maxdot']['val']:
                     self.matrix.draw_pixel(
@@ -182,7 +182,7 @@ class Stream(object):
 
 class Frame():
 
-    with open('properties.json', 'r') as f:
+    with open('api\\properties.json', 'r') as f:
         props = json.load(f)
 
     def __init__(self) -> None:
@@ -205,8 +205,8 @@ class Frame():
     
 
     def update_features(self):
-            if round(int(Frame.props['brightness']['val'])/100,2) != self.neopixelmatrix.matrix.pixels.brightness:
-                self.neopixelmatrix.matrix.pixels.brightness =  round(int(Frame.props['brightness']['val'])/100,2)
+            if round(int(Frame.props['brightness']['val'])/10,2) != self.neopixelmatrix.matrix.pixels.brightness:
+                self.neopixelmatrix.matrix.pixels.brightness =  round(int(Frame.props['brightness']['val'])/10,2)
 
     def update(self):
         while True: #  mytime + 20 >= time():

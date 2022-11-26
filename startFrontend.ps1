@@ -1,0 +1,2 @@
+cd typescript_frontend
+yarn dev

@@ -1,5 +1,5 @@
 {
-    "brightness": {"val":1, "options": [0,100]},
+    "brightness": {"val":1, "options": [0,10]},
     "freqarea": {"val":35, "options": [16,100]},
     "smooth": {"val":3, "options": [1,10]},
     "falldown": {"val":5, "options": [1,10]},
@@ -11,6 +11,6 @@
     "blackspec": {"val":false, "options": [false,true]},
     "center": {"val":false, "options": [false,true]},
     "animation": {"val":"random", "options": ["None"]},
-    "renderSpec": {"val":false, "options": [false,true]},
+    "renderSpec": {"val":true, "options": [false,true]},
     "renderAnimation": {"val":false, "options": [false,true]}
 }

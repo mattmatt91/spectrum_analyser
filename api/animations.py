@@ -7,7 +7,7 @@ SIZE = 16
 
 
 def init_man():
-    path_men = ['animations\\men0', 'animations\\men1', 'animations\\men2']
+    path_men = ['api\\animations\\men0', 'api\\animations\\men1', 'api\\animations\\men2']
     arr_men = [np.loadtxt(man).tolist() for man in path_men]
     men = []
     for man in arr_men:
@@ -22,7 +22,7 @@ def init_man():
 
 
 def init_onair():
-    path_onair = 'animations\\on_air0'
+    path_onair = 'api\\animations\\on_air0'
     onair = np.loadtxt(path_onair).tolist()
     x = [int(i) for i in [onair[i][0] for i in range(len(onair))]]
     y = [int(i) for i in [onair[i][1] for i in range(len(onair))]]
